@@ -3,8 +3,8 @@ const app = express()
 
 app.use(express.json())
 
-app.get('/', (req, res) => {
-  res.send('Server is running')
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', message: 'Finance Tracker API is running' })
 })
 
 const PORT = 3000
