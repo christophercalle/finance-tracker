@@ -1,8 +1,10 @@
 const express = require('express')
 const app = express()
 const pool = require('./db')
+const authRoutes = require('./routes/auth')
 
 app.use(express.json())
+app.use('/auth', authRoutes)
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Finance Tracker API is running' })
