@@ -4,3 +4,15 @@ CREATE TABLE users (
   password VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT NOW()
 );
+
+
+CREATE TABLE transactions (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  amount DECIMAL(10,2) NOT NULL,
+  type VARCHAR(50) NOT NULL,
+  category VARCHAR(100),
+  description VARCHAR(255),
+  date DATE NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
