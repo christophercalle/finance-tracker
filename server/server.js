@@ -19,6 +19,12 @@ app.get('/db-test', async (req, res) => {
   }
 })
 
+const verifyToken = require('./middleware/auth')
+
+app.get('/protected', verifyToken, (req, res) => {
+  res.json({ message: 'Access granted', userId: req.user.userId })
+})
+
 const PORT = 3000
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
