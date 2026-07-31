@@ -6,9 +6,10 @@ const router = express.Router()
 const verifyToken = require('../middleware/auth')
 
 // Controller functions
-const { createTransaction } = require('../controllers/transactions')
+const { createTransaction, getTransactions } = require('../controllers/transactions')
 
 // Create transaction route — protected by JWT middleware
 router.post('/', verifyToken, createTransaction)
+router.get('/', verifyToken, getTransactions)
 
 module.exports = router
