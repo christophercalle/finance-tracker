@@ -2,8 +2,8 @@ const pool = require('../db')
 
 
 const createTransaction = async (req, res) => {
-  const { amount, type, category, description, date } = req.body
-  const user_id = req.user.userId
+ const { amount, type, category, description, date } = req.body
+ const user_id = req.user.userId 
 
   try {
     const result = await pool.query(
@@ -34,4 +34,28 @@ const getTransactions = async (req, res) => {
   }
 }
 
-module.exports = { createTransaction, getTransactions }
+
+const updateTransaction = async (req, res) => {
+  const { id } = req.params
+  const { amount, type, category, description, date } = req.body
+  const user_id = req.user.userId
+
+  try {
+    const result = await pool.query(
+      'UPDATE transactions SET amount = $1, type = $2, category = $3, description = $4, date = $5 WHERE id = $6 AND user_id = $7 RETURNING *',
+      [amount, type, category, description, date, id, user_id]
+    )
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Transaction not found' })
+    }
+
+    res.json({ transaction: result.rows[0] })
+
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
+
+module.exports = { createTransaction, getTransactions, updateTransaction }
