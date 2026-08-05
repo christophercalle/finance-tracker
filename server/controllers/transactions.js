@@ -20,12 +20,34 @@ const createTransaction = async (req, res) => {
 
 const getTransactions = async (req, res) => {
   const user_id = req.user.userId
+  const { category, startDate, endDate } = req.query
+
+  let query = 'SELECT * FROM transactions WHERE user_id = $1'
+  let values = [user_id]
+  let paramCount = 2
+
+  if (category) {
+    query += ` AND category = $${paramCount}`
+    values.push(category)
+    paramCount++
+  }
+
+  if (startDate) {
+    query += ` AND date >= $${paramCount}`
+    values.push(startDate)
+    paramCount++
+  }
+
+  if (endDate) {
+    query += ` AND date <= $${paramCount}`
+    values.push(endDate)
+    paramCount++
+  }
+
+  query += ' ORDER BY date DESC'
 
   try {
-    const result = await pool.query(
-      'SELECT * FROM transactions WHERE user_id = $1 ORDER BY date DESC',
-      [user_id]
-    )
+        const result = await pool.query(query, values)
 
     res.json({ transactions: result.rows })
 
