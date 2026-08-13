@@ -103,4 +103,44 @@ const deleteTransaction = async (req,res) => {
 
 
 
-module.exports = { createTransaction, getTransactions, updateTransaction, deleteTransaction }
+const getDashboard = async (req,res) => {
+    const user_id = req.user.userId
+
+    try {
+      const totalsResult = await pool.query(
+        `SELECT 
+          SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as total_income,
+          SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as total_expenses
+        FROM transactions 
+        WHERE user_id = $1`,
+        [user_id]
+      )
+
+      const categoryResult = await pool.query(
+        `SELECT category, SUM(amount) as total
+        FROM transactions
+        WHERE user_id = $1 AND type = 'expense'
+        GROUP BY category
+        ORDER BY total DESC`,
+        [user_id]
+      )
+
+      const totals = totalsResult.rows[0]
+      res.json({
+        total_income: totals.total_income,
+        total_expenses: totals.total_expenses,
+        net_balance: totals.total_income - totals.total_expenses,
+        spending_by_category: categoryResult.rows
+      })
+    }
+
+    catch(err) {
+      res.status(500).json({error: err.message })
+    }
+}
+
+
+
+module.exports = { createTransaction, getTransactions, updateTransaction, deleteTransaction, getDashboard }
+
+
