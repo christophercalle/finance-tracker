@@ -1,9 +1,12 @@
+import { Routes, Route } from 'react-router-dom'
 function App() {
   return (
-    <div>
-      <h1>Finance Tracker</h1>
-    </div>
+    <Routes>
+      <Route path="/login" element={<h1>Login Page</h1>} />
+      <Route path="/register" element={<h1>Register Page</h1>} />
+      <Route path="/dashboard" element={<h1>Dashboard Page</h1>} />
+      <Route path="/transactions" element={<h1>Transactions Page</h1>} />
+    </Routes>
   )
 }
-
 export default App
