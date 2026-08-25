@@ -1,16 +1,19 @@
 import {useState} from 'react'
 
-
-
-
 function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
+    
+     
+    const handleSubmit = (e) => {
+        e.preventDefault()
+    }
 
     return (
         <div>
             <h2>Login</h2>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <input 
                     type="email" 
                     placeholder="Email" 
