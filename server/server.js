@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 const app = express()
 const pool = require('./db')
 
@@ -11,6 +12,7 @@ const verifyToken = require('./middleware/auth')
 
 // Parse incoming JSON request bodies
 app.use(express.json())
+app.use(cors())
 
 // Register routes
 app.use('/auth', authRoutes)
